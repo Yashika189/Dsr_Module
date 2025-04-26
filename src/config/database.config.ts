@@ -1,7 +1,7 @@
 const path = require('path');
 import { join } from 'path';
 
-// src/config/database.config.ts
+
 export default {
   dialect: 'postgres',
   host: process.env.DB_HOST || 'localhost',

@@ -26,8 +26,8 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
     const passwordMatches = await bcrypt.compare( dto.password,hashedPassword);
 
-     console.log(passwordMatches)
-     console.log(hashedPassword)
+     //console.log(passwordMatches)
+     //console.log(hashedPassword)
 
     // 2️ Save user with the hashed password
     const user = await this.userService.create({
@@ -58,14 +58,14 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
   
-    console.log(user.dataValues);
+    //console.log(user.dataValues);
 
     const passwordMatches = await bcrypt.compare( dto.password, user.dataValues.password);
     //const hashed=await bcrypt.hash(dto.password, 10);
     // console.log(hashed)
-    console.log(dto.password);
-    console.log(user.password);
-    console.log(passwordMatches)
+    // console.log(dto.password);
+    // console.log(user.password);
+    // console.log(passwordMatches)
   
     if (!passwordMatches) {
       throw new UnauthorizedException('Invalid credentials');
@@ -88,11 +88,11 @@ export class AuthService {
   async sendOtp(email: string) {
     const otp = randomInt(100000, 999999).toString();
 
-    await this.redisService.set(`otp:${email}`, otp, 300); // 5 minutes TTL
+    await this.redisService.set(`otp:${email}`, otp, 300); 
     console.log(email)
     await this.mailerService.sendMail({
       to: email,
-      subject: 'Your OTP Code',
+      subject: ' OTP Code',
       text: `Your OTP is ${otp}. It expires in 5 minutes.`,
     });
 

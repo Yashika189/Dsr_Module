@@ -15,7 +15,7 @@ export class AuthController {
 
   @Post('login')
   login(@Body() dto: LoginDto) {
-    // Destructure the dto to get both email and password
+
     return this.authService.login(dto);
   }
 

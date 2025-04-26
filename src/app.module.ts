@@ -7,17 +7,18 @@ import { DsrModule } from './dsr/dsr.module';
 import { RedisModule } from './redis/redis.module';
 import { WinstonLoggerService } from './logging/winston.logger';
 import { LoggingMiddleware } from './logging/logging.middleware';
+import { UserService } from './users/user.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: '.env', // Make sure .env file is available
     }),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         dialect: 'postgres',
         host: configService.get<string>('DB_HOST'),
         port: configService.get<number>('DB_PORT'),
@@ -25,7 +26,7 @@ import { LoggingMiddleware } from './logging/logging.middleware';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadModels: true,
-        synchronize: true,
+        synchronize: process.env.NODE_ENV === 'development', 
       }),
     }),
     UsersModule,
@@ -37,6 +38,6 @@ import { LoggingMiddleware } from './logging/logging.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggingMiddleware).forRoutes('*');
+    consumer.apply(LoggingMiddleware).forRoutes('*'); 
   }
 }
